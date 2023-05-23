@@ -1,2 +1,0 @@
-processed=/home/joaorodrigues/git-hub/public-repositories/dijkstra-route-files/tests/processed
-unprocessed=/home/joaorodrigues/git-hub/public-repositories/dijkstra-route-files/tests/unprocessed

@@ -6,21 +6,13 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class FileProcessor {
-    private final String configFile;
+    private String configFile;
 
-    private String processedDirectory;
-
-    private String notProcessedDirectory;
-
-    private final String relativePathTest;
-
-    public FileProcessor(String configFile) {
+    private String relativePathTest;
+    public void readConfigFile (String configFile) {
         this.configFile = configFile;
         this.relativePathTest = System.getProperty("user.dir") + "/test";
-        this.readConfigFile();
-    }
 
-    private void readConfigFile () {
         Path configFilePath = Paths.get(this.configFile);
 
         try {
@@ -28,16 +20,11 @@ public class FileProcessor {
                     .map(line -> line.replaceAll(".*=", ""))
                     .collect(Collectors.toList());
 
-            processedDirectory = directories.get(0);
-            notProcessedDirectory = directories.get(1);
-
             createDirectories(directories);
 
         } catch (Exception ex){
             System.out.println("Error reading directories");
         }
-
-
     }
 
     private void createDirectories(List<String> directories){
@@ -51,11 +38,13 @@ public class FileProcessor {
     }
 
     public void processFiles() {
+        FileProcessorPoolManager fileProcessorPoolManager = new FileProcessorPoolManager();
+
         try {
             String newFileName = generateSequentialFileName();
             Path newFilePath = createFile(newFileName);
-            System.out.println(newFilePath);
-            //moveFile(newFilePath, processedDirectory, notProcessedDirectory);
+            System.out.println(relativePathTest);
+            fileProcessorPoolManager.processFilesInDirectory(relativePathTest);
         } catch (IOException ex) {
             System.out.println("Error processing files: " + ex.getMessage());
         }
@@ -83,26 +72,5 @@ public class FileProcessor {
 
         return filePath;
     }
-
-    private void moveFile(Path filePath, String successDirectory, String failureDirectory) {
-        try {
-            Path successFilePath = Paths.get(successDirectory, filePath.getFileName().toString());
-            Files.move(filePath, successFilePath, StandardCopyOption.REPLACE_EXISTING);
-            System.out.println("File moved to success directory: " + successFilePath.toAbsolutePath());
-        } catch (IOException e) {
-            moveToFailureDirectory(filePath, failureDirectory);
-        }
-    }
-
-    private void moveToFailureDirectory(Path filePath, String failureDirectory) {
-        try {
-            Path failureFilePath = Paths.get(failureDirectory, filePath.getFileName().toString());
-            Files.move(filePath, failureFilePath, StandardCopyOption.REPLACE_EXISTING);
-            System.out.println("File moved to crash directory: " + failureFilePath.toAbsolutePath());
-        } catch (IOException ex) {
-            System.out.println("Error moving file to failure directory: " + ex.getMessage());
-        }
-    }
-
 }
 

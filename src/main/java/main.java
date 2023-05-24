@@ -6,7 +6,8 @@ public class main {
     public static void main(String[] args) {
 
         String configFile = ConfigFileCreator.createDirectorieFileConfiguration();
-        FileProcessor fileProcessor = new FileProcessor(configFile);
+        FileProcessor fileProcessor = new FileProcessor();
+        fileProcessor.readConfigFile(configFile);
         fileProcessor.processFiles();
     }
 }

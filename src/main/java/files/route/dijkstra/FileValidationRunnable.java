@@ -62,12 +62,12 @@ public class FileValidationRunnable implements Runnable {
             e.printStackTrace();
         }
 
-//        if(!countNodes.equals(nodes.size())){
-//            System.out.println("Error: Total number of invalid nodes");
-//            moveToFailureDirectory();
-//        }
-//
-//        moveToSuccessDirectory();
+        if(!countNodes.equals(nodes.size())){
+            System.out.println("Error: Total number of invalid nodes");
+            moveToFailureDirectory();
+        }
+
+        moveToSuccessDirectory();
     }
 
     private void moveToSuccessDirectory() {

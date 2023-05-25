@@ -1,5 +1,6 @@
 package files.route.dijkstra;
 
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.*;
 import java.util.List;
@@ -10,10 +11,14 @@ public class FileProcessor {
 
     private String relativePathTest;
     public void readConfigFile (String configFile) {
+
+
         this.configFile = configFile;
         this.relativePathTest = System.getProperty("user.dir") + "/test";
 
         Path configFilePath = Paths.get(this.configFile);
+
+        this.configFileValidation(configFilePath);
 
         try {
             List<String> directories = Files.lines(configFilePath)
@@ -27,10 +32,34 @@ public class FileProcessor {
         }
     }
 
+    private void configFileValidation(Path configFilePath) {
+        File file = new File(this.configFile);
+
+        if(!file.exists()){
+            throw new RuntimeException("config file does not exist");
+        }
+
+        if(file.length() == 0){
+            throw new RuntimeException("config file is empty");
+        }
+
+        try {
+            Files.lines(configFilePath).forEach((line) -> {
+                if(line.contains("@")){
+                    throw new RuntimeException("config file is invalid");
+                }
+            });
+        } catch (Exception ex) {
+            throw new RuntimeException("config file is invalid");
+        }
+    }
+
     private void createDirectories(List<String> directories){
         directories.forEach(line -> {
             try {
-                Files.createDirectories(Path.of(line));
+                if(!new File(line).exists()){
+                    Files.createDirectories(Path.of(line));
+                }
             } catch (IOException e) {
                 System.out.println("Error creating directories");
             }
@@ -42,7 +71,7 @@ public class FileProcessor {
 
         try {
             String newFileName = generateSequentialFileName();
-            Path newFilePath = createFile(newFileName);
+            //Path newFilePath = createFile(newFileName);
             System.out.println(relativePathTest);
             fileProcessorPoolManager.processFilesInDirectory(relativePathTest);
         } catch (IOException ex) {

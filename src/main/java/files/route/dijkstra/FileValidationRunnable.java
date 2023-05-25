@@ -1,11 +1,17 @@
 package files.route.dijkstra;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileReader;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class FileValidationRunnable implements Runnable {
     private String filePath;
@@ -26,48 +32,77 @@ public class FileValidationRunnable implements Runnable {
 
     @Override
     public void run() {
-//        try (BufferedReader reader = new BufferedReader(new FileReader(filePath))) {
-//            String line;
-//            while ((line = reader.readLine()) != null) {
-//                // Lógica de processamento da linha do arquivo
-//                System.out.println(line);
-//            }
-//        } catch (IOException e) {
-//            // Tratamento de exceção, se necessário
-//            e.printStackTrace();
-//        }
-
         Thread.currentThread().setName(threadName);
+        Integer countNodes = Integer.valueOf(0);
+        Set<String> nodes = new HashSet<String>();
 
-        try {
-            Thread.sleep(10000);
-            System.out.println(threadName);
-            //moveFile();
+        try (BufferedReader reader = new BufferedReader(new FileReader(filePath))) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                if (!isLastLine(line)) {
+                    if (!isHeaderLine(line)) {
+                        System.out.println("Invalid Header");
+                        moveToFailureDirectory();
+                        return;
+                    }
 
-        } catch (Exception e) {
-            throw new RuntimeException(e);
+                    countNodes = Integer.valueOf(line.substring(2, 4));
+                }
+
+                Pattern pattern = Pattern.compile("[A-Za-z]\\d+");
+                Matcher matcher = pattern.matcher(line);
+
+                while (matcher.find()) {
+                    nodes.add(matcher.group());
+                }
+
+            }
+        } catch (IOException e) {
+            // Tratamento de exceção, se necessário
+            e.printStackTrace();
         }
+
+//        if(!countNodes.equals(nodes.size())){
+//            System.out.println("Error: Total number of invalid nodes");
+//            moveToFailureDirectory();
+//        }
+//
+//        moveToSuccessDirectory();
     }
 
-    private void moveFile() {
+    private void moveToSuccessDirectory() {
         Path filePath = Path.of(this.filePath);
         try {
             Path successFilePath = Paths.get(directoryOrigen.toString(), "processed", filePath.getFileName().toString());
             System.out.println(filePath);
             Files.move(filePath, successFilePath, StandardCopyOption.REPLACE_EXISTING);
-            System.out.println("File moved to success directory: " + successFilePath.toAbsolutePath());
-        } catch (Exception e) {
-           moveToFailureDirectory(filePath);
+            System.out.println("File moved to processed directory: " + successFilePath.toAbsolutePath());
+        } catch (Exception ex) {
+            System.out.println("Error moving file to failure directory: " + ex.getMessage());
         }
     }
-    private void moveToFailureDirectory(Path filePath) {
+
+    private void moveToFailureDirectory() {
+        Path filePath = Path.of(this.filePath);
         try {
             Path failureFilePath = Paths.get(directoryOrigen.toString(), "unprocessed", filePath.getFileName().toString());
             Files.move(filePath, failureFilePath, StandardCopyOption.REPLACE_EXISTING);
-            System.out.println("File moved to crash directory: " + failureFilePath.toAbsolutePath());
+            System.out.println("File moved to unprocessed directory: " + failureFilePath.toAbsolutePath());
         } catch (IOException ex) {
             System.out.println("Error moving file to failure directory: " + ex.getMessage());
         }
+    }
+
+    private boolean isHeaderLine(String linha) {
+        Pattern pattern = Pattern.compile("^\\d+;\\d+;$");
+        Matcher matcher = pattern.matcher(linha);
+        return matcher.matches();
+    }
+
+    private boolean isLastLine(String linha) {
+        Pattern pattern = Pattern.compile("^09[A-Z]{2}=[0-9]+;[A-Z]{2}=[0-9]+;\\d{3};$");
+        Matcher matcher = pattern.matcher(linha);
+        return matcher.matches();
     }
 }
 

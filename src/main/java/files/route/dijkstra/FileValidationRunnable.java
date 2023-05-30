@@ -24,6 +24,8 @@ public class FileValidationRunnable implements Runnable {
 
     private File directoryOrigen;
 
+    private ConfigFile configFileCreator;
+
     public FileValidationRunnable(File directory, String filePath, String threadName) {
         this.filePath = filePath;
         this.threadName = threadName;
@@ -73,7 +75,7 @@ public class FileValidationRunnable implements Runnable {
     private void moveToSuccessDirectory() {
         Path filePath = Path.of(this.filePath);
         try {
-            Path successFilePath = Paths.get(directoryOrigen.toString(), "processed", filePath.getFileName().toString());
+            Path successFilePath = Paths.get(directoryOrigen.toString(), ConfigFile.getSuccessDirectoryName(), filePath.getFileName().toString());
             System.out.println(filePath);
             Files.move(filePath, successFilePath, StandardCopyOption.REPLACE_EXISTING);
             System.out.println("File moved to processed directory: " + successFilePath.toAbsolutePath());
@@ -85,7 +87,7 @@ public class FileValidationRunnable implements Runnable {
     private void moveToFailureDirectory() {
         Path filePath = Path.of(this.filePath);
         try {
-            Path failureFilePath = Paths.get(directoryOrigen.toString(), "unprocessed", filePath.getFileName().toString());
+            Path failureFilePath = Paths.get(directoryOrigen.toString(), ConfigFile.getFailedDirectoryName(), filePath.getFileName().toString());
             Files.move(filePath, failureFilePath, StandardCopyOption.REPLACE_EXISTING);
             System.out.println("File moved to unprocessed directory: " + failureFilePath.toAbsolutePath());
         } catch (IOException ex) {

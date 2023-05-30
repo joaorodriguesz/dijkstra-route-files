@@ -1,13 +1,14 @@
-import files.route.dijkstra.ConfigFileCreator;
+import files.route.dijkstra.ConfigFile;
 import files.route.dijkstra.FileProcessor;
 
 
 public class main {
     public static void main(String[] args) {
 
-        String configFile = ConfigFileCreator.createDirectorieFileConfiguration();
+        //ConfigFileCreator configFile = new ConfigFileCreator("/home/joaorodrigues/Documents", "processado", "naoProcessado");
+        ConfigFile configFile = new ConfigFile();
         FileProcessor fileProcessor = new FileProcessor();
-        fileProcessor.readConfigFile(configFile);
+        fileProcessor.readConfigFile(ConfigFile.getDestinationPath());
         fileProcessor.processFiles();
     }
 }

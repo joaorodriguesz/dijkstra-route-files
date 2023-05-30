@@ -13,10 +13,7 @@ public class FileProcessorPoolManager {
     private ExecutorService executor;
 
     public FileProcessorPoolManager() {
-        // Determina o número de threads com base no número de processadores disponíveis
-        int numThreads = Math.min(MAX_THREADS, Math.max(MIN_THREADS, Runtime.getRuntime().availableProcessors()));
-
-        // Cria um pool de threads com o número de threads calculado
+        Integer numThreads = Math.min(MAX_THREADS, Math.max(MIN_THREADS, Runtime.getRuntime().availableProcessors()));
         executor = Executors.newFixedThreadPool(numThreads);
     }
 

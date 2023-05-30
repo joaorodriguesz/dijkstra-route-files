@@ -84,6 +84,7 @@ public class Configuration extends JFrame{
 				}
 
 				fileProcessor.readConfigFile(ConfigFile.getDestinationPath());
+				fileProcessor.processFiles();
 
 				JOptionPane.showMessageDialog(Configuration.this,
 						"Diretory: " + ConfigFile.getDestinationPath() +

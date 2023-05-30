@@ -214,30 +214,31 @@ public class FindRoute extends JFrame{
 			@Override
 			public void actionPerformed(ActionEvent e) {
 
-				try {
-
-					int origin = Integer.parseInt(JOptionPane.showInputDialog("Origem"));
-					if(origin <= 0) {
-						JOptionPane.showMessageDialog(null,"O campo código origem não pode ser menor que zero! Reprocesse!");
-						return;
-					}
-
-					int destiny = Integer.parseInt(JOptionPane.showInputDialog("Destino"));
-					if(destiny <= 0) {
-						JOptionPane.showMessageDialog(null,"O campo código destino não pode ser menor que zero! Reprocesse!");
-						return;
-					}
-
-					else {
-						List<Integer> result = g.shortestPath(origin, destiny);
-
-						JOptionPane.showMessageDialog(null, "Confira o resultado: "+ result);
-					}
-
-				}
-				catch (NumberFormatException err){
-					JOptionPane.showMessageDialog(null, "Os campos código origem e código destino não podem estar vazio! Reprocesse!");
-				}
+				System.out.println(txtSearch.getText());
+//				try {
+//
+//					int origin = Integer.parseInt(JOptionPane.showInputDialog("Origem"));
+//					if(origin <= 0) {
+//						JOptionPane.showMessageDialog(null,"O campo código origem não pode ser menor que zero! Reprocesse!");
+//						return;
+//					}
+//
+//					int destiny = Integer.parseInt(JOptionPane.showInputDialog("Destino"));
+//					if(destiny <= 0) {
+//						JOptionPane.showMessageDialog(null,"O campo código destino não pode ser menor que zero! Reprocesse!");
+//						return;
+//					}
+//
+//					else {
+//						List<Integer> result = g.shortestPath(origin, destiny);
+//
+//						JOptionPane.showMessageDialog(null, "Confira o resultado: "+ result);
+//					}
+//
+//				}
+//				catch (NumberFormatException err){
+//					JOptionPane.showMessageDialog(null, "Os campos código origem e código destino não podem estar vazio! Reprocesse!");
+//				}
 			}
 		});
 		btnProcess.setBounds(465, 430, 110, 25);
@@ -245,14 +246,12 @@ public class FindRoute extends JFrame{
 
 		btnSearch.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				//loadFromConfigFile(ConfigFile.getConfigFilePath());
-					JFileChooser chooser = new JFileChooser();
-					int result = chooser.showOpenDialog(btnSearch);
-					if (result == JFileChooser.APPROVE_OPTION) {
-						File selectedFolder = chooser.getSelectedFile();
-						txtSearch.setText(selectedFolder.getAbsolutePath());
-					}
-
+				JFileChooser chooser = new JFileChooser();
+				int result = chooser.showOpenDialog(btnSearch);
+				if (result == JFileChooser.APPROVE_OPTION) {
+					File selectedFolder = chooser.getSelectedFile();
+					txtSearch.setText(selectedFolder.getAbsolutePath());
+				}
 			}
 		});
 
@@ -285,5 +284,11 @@ public class FindRoute extends JFrame{
 				}
 			}
 		});
+
+//		btnProcess.addActionListener(new ActionListener() {
+//			public void actionPerformed(ActionEvent e) {
+//
+//			}
+//		});
 	}
 }

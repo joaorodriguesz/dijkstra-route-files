@@ -1,4 +1,4 @@
-package files.route.dijkstra;
+package files.route.dijkstra.config.file;
 
 import java.io.File;
 import java.io.IOException;

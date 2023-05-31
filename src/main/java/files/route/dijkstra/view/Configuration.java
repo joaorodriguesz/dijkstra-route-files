@@ -1,7 +1,7 @@
 package files.route.dijkstra.view;
 
-import files.route.dijkstra.ConfigFile;
-import files.route.dijkstra.FileProcessor;
+import files.route.dijkstra.config.file.ConfigFile;
+import files.route.dijkstra.file.process.FileProcessor;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;

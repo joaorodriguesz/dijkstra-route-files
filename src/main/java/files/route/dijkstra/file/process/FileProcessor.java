@@ -1,4 +1,7 @@
-package files.route.dijkstra;
+package files.route.dijkstra.file.process;
+
+import files.route.dijkstra.config.file.ConfigFile;
+import files.route.dijkstra.config.file.ConfigFileValidator;
 
 import java.io.File;
 import java.io.IOException;
@@ -39,7 +42,6 @@ public class FileProcessor {
 
         try {
             String newFileName = generateSequentialFileName();
-            //Path newFilePath = createFile(newFileName);
             System.out.println(ConfigFile.getTestPath());
             fileProcessorPoolManager.processFilesInDirectory(ConfigFile.getTestPath());
         } catch (IOException ex) {

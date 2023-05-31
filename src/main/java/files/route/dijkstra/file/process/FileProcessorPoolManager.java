@@ -1,4 +1,4 @@
-package files.route.dijkstra;
+package files.route.dijkstra.file.process;
 
 import java.io.File;
 import java.util.List;

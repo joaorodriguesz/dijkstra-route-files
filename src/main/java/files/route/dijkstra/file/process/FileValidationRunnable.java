@@ -1,4 +1,6 @@
-package files.route.dijkstra;
+package files.route.dijkstra.file.process;
+
+import files.route.dijkstra.config.file.ConfigFile;
 
 import java.io.BufferedReader;
 import java.io.File;

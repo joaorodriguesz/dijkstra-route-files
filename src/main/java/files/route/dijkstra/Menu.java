@@ -1,4 +1,7 @@
-package files.route.dijkstra.view;
+package files.route.dijkstra;
+
+import files.route.dijkstra.view.Configuration;
+import files.route.dijkstra.view.FindRoute;
 
 import javax.swing.*;
 import java.awt.*;

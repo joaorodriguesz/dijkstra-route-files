@@ -6,6 +6,7 @@ import files.route.dijkstra.file.process.FileProcessor;
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Objects;
 
 public class Configuration extends JFrame{
 
@@ -59,7 +60,7 @@ public class Configuration extends JFrame{
 		chkRota.setBounds(80, 110, 20, 25);
 		getContentPane().add(chkRota);
 
-		lblCheck = new JLabel("Default");
+		lblCheck = new JLabel("Refresh");
 		lblCheck.setBounds(100, 110, 120, 25);
 		getContentPane().add(lblCheck);
 
@@ -70,29 +71,37 @@ public class Configuration extends JFrame{
 		btnSalvar.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				ConfigFile configFile = new ConfigFile();
-				FileProcessor fileProcessor = new FileProcessor();
-				String diretory = txtRootDireotry.getText();
-				String success = txtSucesso.getText();
-				String error = txtErro.getText();
-				Boolean automaticDirectory = chkRota.isSelected();
+				try {
+					ConfigFile configFile = new ConfigFile();
+					FileProcessor fileProcessor = new FileProcessor();
+					String diretory = txtRootDireotry.getText().trim();
+					String success = txtSucesso.getText().trim();
+					String error = txtErro.getText().trim();
+					Boolean automaticDirectory = chkRota.isSelected();
 
-				if(automaticDirectory){
-					configFile.createConfigFile();
-				} else {
-					configFile.createConfigFile(diretory, success, error);
+					if(!automaticDirectory){
+						if(diretory.length() > 0){
+							configFile.createConfigFile(diretory, success, error);
+						} else {
+							configFile.createConfigFile();
+						}
+						fileProcessor.readConfigFile(ConfigFile.getConfigFilePath());
+						fileProcessor.processFiles();
+					} else {
+						fileProcessor.processFiles();
+					}
+
+					JOptionPane.showMessageDialog(Configuration.this,
+							"Diretory: " + ConfigFile.getDestinationPath() +
+									"\nSuccess: " + ConfigFile.getSuccessDirectoryName() +
+									"\nError: " + ConfigFile.getFailedDirectoryName() +
+									"\nRefresh: " + automaticDirectory);
+
+					dispose();
+				} catch (Exception ex){
+					JOptionPane.showMessageDialog(null, "Directory not found", "Error", JOptionPane.ERROR_MESSAGE);
 				}
 
-				fileProcessor.readConfigFile(ConfigFile.getDestinationPath());
-				fileProcessor.processFiles();
-
-				JOptionPane.showMessageDialog(Configuration.this,
-						"Diretory: " + ConfigFile.getDestinationPath() +
-								"\nSuccess: " + ConfigFile.getSuccessDirectoryName() +
-								"\nError: " + ConfigFile.getFailedDirectoryName() +
-								"\nAutomatic file config: " + automaticDirectory);
-
-				dispose();
 			}
 		});
 	}

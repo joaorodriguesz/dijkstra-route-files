@@ -42,8 +42,10 @@ public class FileValidationRunnable implements Runnable {
 
         try (BufferedReader reader = new BufferedReader(new FileReader(filePath))) {
             String line;
+            int index = 0;
             while ((line = reader.readLine()) != null) {
-                if (!isLastLine(line)) {
+                index++;
+                if (index == 1) {
                     if (!isHeaderLine(line)) {
                         System.out.println("Invalid Header");
                         moveToFailureDirectory();
@@ -98,7 +100,7 @@ public class FileValidationRunnable implements Runnable {
     }
 
     private boolean isHeaderLine(String linha) {
-        Pattern pattern = Pattern.compile("^\\d+;\\d+;$");
+        Pattern pattern = Pattern.compile("\\d{4};\\d{4};\\d{4}");
         Matcher matcher = pattern.matcher(linha);
         return matcher.matches();
     }
